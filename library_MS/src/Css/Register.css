@@ -1,0 +1,74 @@
+.registerContainer {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+}
+
+.registerCard {
+  width: 400px;
+  padding: 40px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  color: white;
+}
+
+.registerTitle {
+  margin-bottom: 10px;
+}
+
+.registerSubtitle {
+  margin-bottom: 30px;
+  opacity: 0.8;
+  font-size: 14px;
+}
+
+.registerInput {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 18px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+.registerInput:focus {
+  box-shadow: 0 0 0 2px #00c6ff;
+}
+
+.registerButton {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: #00c6ff;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.registerButton:hover {
+  background: #0099cc;
+}
+
+.bottomText {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.loginLink {
+  color: #00c6ff;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.loginLink:hover {
+  text-decoration: underline;
+}
