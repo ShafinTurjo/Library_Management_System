@@ -7,15 +7,13 @@ function Home() {
       <div className="content">
 
         <div className="left">
-          <div className="icon">📚</div>
+          <div className="icon"></div>
 
           <h1 className="title">
-            Library Management System
+             Organize, manage and track your books easily.
           </h1>
 
-          <p className="subtitle">
-            Organize, manage and track your books easily.
-          </p>
+      
 
           <div className="buttonGroup">
             <Link to="/Login">
