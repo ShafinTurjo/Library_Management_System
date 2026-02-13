@@ -68,3 +68,101 @@
   background: white;
   color: #203a43;
 }
+.container {
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  padding: 40px;
+}
+
+.content {
+  width: 90%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* LEFT SIDE TEXT */
+.left {
+  max-width: 600px;
+}
+
+.icon {
+  font-size: 60px;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.subtitle {
+  font-size: 18px;
+  opacity: 0.85;
+  margin-bottom: 40px;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 20px;
+}
+
+/* RIGHT SIDE IMAGE */
+.right img {
+  width: 350px;
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Buttons */
+.primaryBtn {
+  padding: 12px 35px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  background: #00c6ff;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.primaryBtn:hover {
+  background: #0099cc;
+}
+
+.secondaryBtn {
+  padding: 12px 35px;
+  border-radius: 30px;
+  border: 2px solid white;
+  cursor: pointer;
+  background: transparent;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.secondaryBtn:hover {
+  background: white;
+  color: #203a43;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
