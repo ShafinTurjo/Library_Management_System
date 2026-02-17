@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
     exit;
 }
 
-include "index.php"; 
+include "index.php";
 
 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -20,10 +20,8 @@ if ($userId === "" || $password === "") {
     exit;
 }
 
-
 $sql = "SELECT userId, password, role FROM users WHERE userId = ?";
-$params = array($userId);
-$stmt = sqlsrv_query($conn, $sql, $params);
+$stmt = sqlsrv_query($conn, $sql, [$userId]);
 
 if ($stmt === false) {
     echo json_encode(["status" => "error", "message" => "Query failed"]);
@@ -33,18 +31,18 @@ if ($stmt === false) {
 $user = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
 
 if ($user) {
-    
-    if ($password === $user['password']) {
+    if (password_verify($password, $user['password'])) {
+
         echo json_encode([
             "status" => "success",
             "role" => trim($user['role']),
             "message" => "Login Successful"
         ]);
     } else {
-        echo json_encode(["status" => "error", "message" => "Incorrect Password"]);
+        echo json_encode(["status" => "error", "message" => "Invalid Credentials"]);
     }
 } else {
-    echo json_encode(["status" => "error", "message" => "User not found"]);
+    echo json_encode(["status" => "error", "message" => "Invalid Credentials"]);
 }
 
 sqlsrv_free_stmt($stmt);
