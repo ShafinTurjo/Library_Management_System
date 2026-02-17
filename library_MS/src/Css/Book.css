@@ -73,7 +73,7 @@
   background: rgb(10, 3, 93);
   padding: 25px;
   border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(5, 7, 8, 0.08);
+  box-shadow: 0 6px 20px rgba(204, 214, 218, 0.08);
 }
 
 /* ================= TABLE ================= */
@@ -95,7 +95,8 @@
 .book-table td {
   padding: 12px;
   text-align: center;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid white;
+  font: color white;
 }
 
 .book-table tr:hover {
