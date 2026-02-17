@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import Splash from "./Pages/Splash";
 import Home from "./Pages/Home";
-import Register from "./Pages/register";
+import Register from "./Pages/Register";
 import Login from "./Pages/Login";
 import Book from "./Pages/Book";
 

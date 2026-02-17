@@ -17,7 +17,7 @@ if ($userId === "" || $password === "") {
     exit;
 }
 
-// ডাটাবেসে চেক করা
+
 $sql = "SELECT userId, password, role, name FROM users WHERE userId = ?";
 $stmt = sqlsrv_query($conn, $sql, array($userId));
 
@@ -28,7 +28,7 @@ if ($stmt === false) {
 
 $user = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
 
-// পাসওয়ার্ড ম্যাচিং (যদি আপনি পাসওয়ার্ড এনক্রিপ্ট না করেন তবেই এটি কাজ করবে)
+
 if ($user && $user['password'] === $password) {
     echo json_encode([
         "status" => "success",
