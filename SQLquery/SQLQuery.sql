@@ -33,3 +33,6 @@ GO
 ALTER TABLE users
 ADD token_expire DATETIME NULL;
 GO
+ALTER TABLE users 
+ADD name VARCHAR(100) NOT NULL; 
+GO

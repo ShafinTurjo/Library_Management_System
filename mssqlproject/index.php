@@ -2,12 +2,15 @@
 header("Access-Control-Allow-Origin: *");
 
 
+sqlsrv_configure("WarningsReturnAsErrors", 0);
+
 $serverName = ".\SQLEXPRESS";
 $connectionOptions = [
     "Database" => "LibraryDB",
     "Uid" => "new",
     "PWD" => "1234",
-    "TrustServerCertificate" => true
+    "TrustServerCertificate" => true,
+    "CharacterSet" => "UTF-8"
 ];
 
 $conn = sqlsrv_connect($serverName, $connectionOptions);
