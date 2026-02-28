@@ -25,7 +25,7 @@ function Book() {
   return (
     <div className="book-page">
 
-      {/* Top Banner */}
+      
       <div className="top-banner">
         <div className="banner-left">
           <h1>Library Management System</h1>
@@ -37,13 +37,13 @@ function Book() {
         </div>
       </div>
 
-      {/* Header */}
+  
       <div className="book-header">
         <h1>📚 University Library</h1>
         <p>Search and filter books by department</p>
       </div>
 
-      {/* Search + Filter */}
+      
       <div className="filter-section">
         <input
           type="text"
@@ -59,7 +59,7 @@ function Book() {
         </select>
       </div>
 
-      {/* Table */}
+      
       <div className="book-container">
         <table className="book-table">
           <thead>
@@ -84,7 +84,7 @@ function Book() {
                         : "status issued"
                     }
                   >
-                    {book.available}
+                    {book.status}
                   </span>
                 </td>
               </tr>

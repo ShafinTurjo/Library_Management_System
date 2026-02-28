@@ -6,6 +6,7 @@ import Home from "./Pages/Home";
 import Register from "./Pages/Register";
 import Login from "./Pages/Login";
 import Book from "./Pages/Book";
+import AddBook from "./Pages/AddBook";
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -30,6 +31,8 @@ function App() {
 
         <Route path="/admin-dashboard" element={<Home />} /> 
         <Route path="/member-dashboard" element={<Book />} />
+
+        <Route path="/addbook" element={<AddBook />} />
       </Routes>
     </Router>
   );

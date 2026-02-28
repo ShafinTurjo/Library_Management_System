@@ -1,4 +1,4 @@
-USE master;
+﻿USE master;
 GO
 
 CREATE LOGIN [new] WITH PASSWORD = '1234', CHECK_POLICY = OFF, CHECK_EXPIRATION = OFF;
@@ -50,3 +50,12 @@ CREATE TABLE users (
     token_expire DATETIME NULL
 );
 GO
+CREATE TABLE Books (
+    id INT PRIMARY KEY IDENTITY(1,1),
+    title VARCHAR(255) NOT NULL,
+    author VARCHAR(255) NOT NULL,
+    category VARCHAR(100) NOT NULL,
+    status VARCHAR(20) DEFAULT 'Available' 
+);
+SELECT * FROM Books;
+TRUNCATE TABLE Books;
