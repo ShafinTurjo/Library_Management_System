@@ -1,25 +1,25 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 
-
-sqlsrv_configure("WarningsReturnAsErrors", 0);
-
-$serverName = ".\SQLEXPRESS";
+$serverName = ".\\SQLEXPRESS";
 $connectionOptions = [
     "Database" => "LibraryDB",
     "Uid" => "new",
-    "PWD" => "1234",
-    "TrustServerCertificate" => true,
-    "CharacterSet" => "UTF-8"
+    "PWD" => "1234"
 ];
 
 $conn = sqlsrv_connect($serverName, $connectionOptions);
 
 if ($conn === false) {
-    die(json_encode([
+    echo json_encode([
         "success" => false,
-        "message" => "Database connection failed",
+        "message" => "Real connection failed",
         "error" => sqlsrv_errors()
-    ]));
+    ]);
+} else {
+    echo json_encode([
+        "success" => true,
+        "message" => "Connected successfully"
+    ]);
 }
 ?>
