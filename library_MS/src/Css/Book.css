@@ -73,7 +73,7 @@
   background: rgb(10, 3, 93);
   padding: 25px;
   border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(204, 214, 218, 0.08);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2); /* শ্যাডো একটু গাঢ় করা হলো */
 }
 
 /* ================= TABLE ================= */
@@ -83,6 +83,7 @@
   border-collapse: collapse;
   border-radius: 10px;
   overflow: hidden;
+  color: white; /* পুরো টেবিলের টেক্সট সাদা করার জন্য */
 }
 
 .book-table th {
@@ -90,35 +91,40 @@
   color: white;
   padding: 14px;
   text-align: center;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .book-table td {
   padding: 12px;
   text-align: center;
-  border-bottom: 1px solid white;
-  font: color white;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* বর্ডারটি হালকা করা হলো */
+  color: white; /* এখানে সিনট্যাক্স ঠিক করা হয়েছে */
 }
 
 .book-table tr:hover {
-  background-color: #b08810;
+  background-color: rgba(255, 255, 255, 0.1); /* হোভার করলে হালকা হাইলাইট হবে */
   transition: 0.3s;
+  cursor: pointer;
 }
-
 /* ================= STATUS ================= */
 
 .status {
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600; /* একটু বোল্ড করা হলো */
+  display: inline-block;
+  min-width: 80px;
 }
 
-.available {
-  background-color: #8fd6e3;
-  color: #079a29;
+/* Status Available - হালকা সবুজ ব্যাকগ্রাউন্ড গাঢ় টেক্সট */
+.status.available {
+  background-color: #d4edda;
+  color: #155724;
 }
 
-.issued {
+/* Status Issued - হালকা লাল ব্যাকগ্রাউন্ড গাঢ় টেক্সট */
+.status.issued {
   background-color: #f8d7da;
   color: #721c24;
 }
@@ -127,4 +133,5 @@
   text-align: center;
   margin-top: 20px;
   font-weight: 500;
+  color: white; /* নো ডাটা টেক্সট সাদা হবে */
 }

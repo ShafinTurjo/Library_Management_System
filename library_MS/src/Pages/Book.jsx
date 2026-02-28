@@ -1,25 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../Css/Book.css";
 
 function Book() {
-  const booksData = [
-    { id: 1, title: "Data Structures", author: "Mark Weiss", category: "CSE", available: "Available" },
-    { id: 2, title: "Operating System", author: "Silberschatz", category: "CSE", available: "Issued" },
-    { id: 3, title: "Electrical Machines", author: "Bimbhra", category: "EEE", available: "Available" },
-    { id: 4, title: "Database System Concepts", author: "Silberschatz", category: "Database", available: "Available" },
-    { id: 5, title: "Engineering Mathematics", author: "B.S. Grewal", category: "Engineering Math", available: "Available" },
-    { id: 6, title: "Structural Analysis", author: "Hibbeler", category: "Civil", available: "Available" },
-    { id: 7, title: "Thermodynamics", author: "Cengel", category: "Mechanical", available: "Issued" },
-    { id: 8, title: "Industrial Engineering & Management", author: "O.P. Khanna", category: "IPE", available: "Available" },
-    { id: 9, title: "Production Planning & Control", author: "K.K. Ahuja", category: "IPE", available: "Issued" },
-    { id: 10, title: "Textile Fibre Science", author: "Joseph", category: "Textile", available: "Available" },
-    { id: 11, title: "Principles of Marketing", author: "Philip Kotler", category: "BBA", available: "Available" },
-    { id: 12, title: "Financial Management", author: "I.M. Pandey", category: "BBA", available: "Issued" },
-    { id: 13, title: "Building Construction", author: "Arora & Bindra", category: "Architecture", available: "Available" }
-  ];
-
+  
+  const [booksData, setBooksData] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+  
+  useEffect(() => {
+    fetch("http://localhost/mssqlproject/getBooks.php")
+      .then((res) => res.json())
+      .then((data) => setBooksData(data))
+      .catch((err) => console.error("Error fetching books:", err));
+  }, []);
 
   const categories = ["All", ...new Set(booksData.map(book => book.category))];
 
@@ -86,7 +79,7 @@ function Book() {
                 <td>
                   <span
                     className={
-                      book.available === "Available"
+                      book.status === "Available"
                         ? "status available"
                         : "status issued"
                     }
