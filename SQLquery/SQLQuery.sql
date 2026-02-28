@@ -49,6 +49,7 @@ CREATE TABLE users (
     reset_token VARCHAR(255) NULL,
     token_expire DATETIME NULL
 );
+SELECT * FROM users ;
 GO
 CREATE TABLE Books (
     id INT PRIMARY KEY IDENTITY(1,1),
@@ -59,3 +60,14 @@ CREATE TABLE Books (
 );
 SELECT * FROM Books;
 TRUNCATE TABLE Books;
+CREATE TABLE Transactions (
+    transactionId INT PRIMARY KEY IDENTITY(1,1),
+    userId VARCHAR(50) NOT NULL, 
+    bookId INT NOT NULL,        
+    issueDate DATE DEFAULT GETDATE(),
+    dueDate DATE,               
+    returnDate DATE NULL,        
+    fine DECIMAL(10,2) DEFAULT 0,
+    FOREIGN KEY (bookId) REFERENCES Books(id)
+);
+SELECT * FROM Transactions ;

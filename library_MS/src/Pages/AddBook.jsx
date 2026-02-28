@@ -49,6 +49,11 @@ function AddBook() {
           <option value="BBA">BBA</option>
           <option value="Mechanical">Mechanical</option>
           <option value="Database">Database</option>
+          <option value="Math">Math</option>
+          <option value="Civil">Civil</option>
+          <option value="Ipe">Ipe</option>
+          <option value="Textile">Textile</option>
+          <option value="Architecture">Architecture</option>
         </select>
 
         
