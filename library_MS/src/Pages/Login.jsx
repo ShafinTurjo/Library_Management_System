@@ -7,10 +7,8 @@ function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    if (userId === "" || password === "") {
+  const handleLogin = async () => {
+    if (!userId || !password) {
       alert("Please fill in all fields");
       return;
     }
@@ -18,48 +16,38 @@ function Login() {
     try {
       const response = await fetch("http://localhost/mssqlproject/login.php", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, password }),
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify({
+          userId: String(userId).trim(),
+          password: String(password),
+        }),
       });
 
       const text = await response.text();
       console.log("HTTP", response.status, "Response:", text);
 
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch (err) {
-        alert("Server returned non-JSON response. Check PHP error/logs.");
-        return;
-      }
+      const data = JSON.parse(text);
 
       if (!response.ok) {
-        alert(data.message || `Request failed (HTTP ${response.status})`);
+        alert(data.message || `HTTP ${response.status}`);
         return;
       }
 
-      if (data.status === "success") {
-        alert("Login Successful!");
-
-        const role = data?.user?.role || "";
-
-        if (role.toLowerCase() === "admin") {
-          navigate("/admin-dashboard");
-        } else {
-          navigate("/member-dashboard");
-        }
-      } else {
-        alert(data.message || "Login failed");
-      }
+      alert("Login Successful!");
+      const role = (data?.user?.role || "").toLowerCase();
+      navigate(role === "admin" ? "/admin-dashboard" : "/member-dashboard");
     } catch (err) {
-      console.error("Fetch failed:", err);
-      alert("Fetch failed: " + (err?.message || "Could not connect"));
+      console.error(err);
+      alert("Fetch failed: " + (err?.message || "Unknown error"));
     }
   };
 
   return (
     <div className="loginContainer">
-      <form className="loginCard" onSubmit={handleLogin}>
+      <div className="loginCard">
         <h1 className="loginTitle">Library Login</h1>
         <p className="loginSubtitle">Enter your ID and Password</p>
 
@@ -79,14 +67,14 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button type="submit" className="loginButton">
+        <button type="button" className="loginButton" onClick={handleLogin}>
           Login
         </button>
 
         <p className="bottomText">
           New here? <Link to="/register">Register</Link>
         </p>
-      </form>
+      </div>
     </div>
   );
 }

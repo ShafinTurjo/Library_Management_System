@@ -1,0 +1,167 @@
+.mdLayout{
+  display:flex;
+  min-height:100vh;
+  background:#0b1020;
+  color:#e9eefc;
+  
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.mdSidebar{
+  width:260px;
+  background:#0f1730;
+  border-right:1px solid rgba(255,255,255,0.08);
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.mdBrand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.04);
+}
+
+.mdLogo{
+  width:40px;height:40px;
+  display:grid;place-items:center;
+  border-radius:12px;
+  background:rgba(255,255,255,0.08);
+  font-size:20px;
+}
+
+.mdBrandTitle{ font-weight:800; font-size:16px; }
+.mdBrandSub{ opacity:0.75; font-size:12px; margin-top:2px; }
+
+.mdNav{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.mdNavItem{
+  border:0;
+  text-align:left;
+  background:transparent;
+  color:#e9eefc;
+  padding:12px 12px;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:14px;
+  opacity:0.92;
+}
+.mdNavItem:hover{ background:rgba(255,255,255,0.06); }
+.mdNavItem.active{
+  background:rgba(86,128,255,0.22);
+  outline:1px solid rgba(86,128,255,0.25);
+}
+
+.mdSideFooter{
+  margin-top:auto;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding-top:12px;
+  border-top:1px solid rgba(255,255,255,0.08);
+}
+
+.mdUserBox{
+  padding:10px 12px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.04);
+}
+.mdUserName{ font-weight:800; }
+.mdUserRole{ opacity:0.7; font-size:12px; margin-top:2px; }
+
+.mdLogout{
+  border:0;
+  cursor:pointer;
+  padding:12px 12px;
+  border-radius:12px;
+  background:rgba(255,99,99,0.16);
+  color:#ffd5d5;
+}
+.mdLogout:hover{ background:rgba(255,99,99,0.22); }
+
+.mdMain{
+  flex:1;
+  padding:22px;
+}
+
+.mdTopbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:16px;
+  padding:18px;
+  border-radius:18px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.mdHello{ font-size:18px; font-weight:900; }
+.mdMuted{ opacity:0.7; margin-top:6px; font-size:13px; }
+
+.mdTopActions{ display:flex; gap:10px; }
+.mdBtn{
+  border:0;
+  cursor:pointer;
+  padding:10px 14px;
+  border-radius:12px;
+  background:rgba(86,128,255,0.85);
+  color:white;
+  font-weight:900;
+}
+
+
+.mdBtnGhost{
+  border:1px solid rgba(255,255,255,0.18);
+  cursor:pointer;
+  padding:10px 14px;
+  border-radius:12px;
+  background:transparent;
+  color:#e9eefc;
+  font-weight:900;
+}
+.mdBtnGhost:hover{ background:rgba(255,255,255,0.06); }
+
+.mdContent{ margin-top:18px; }
+
+.mdCardsRow{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap:14px;
+}
+
+.mdCard{
+  padding:16px;
+  border-radius:18px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+}
+.mdCardTitle{ font-weight:900; font-size:15px; }
+.mdCardSub{ opacity:0.7; font-size:12px; margin-top:6px; }
+.mdCardBtn{
+  margin-top:12px;
+
+  border:1px solid rgba(255,255,255,0.14);
+  background:rgba(255,255,255,0.03);
+  color:#e9eefc;
+  padding:10px 12px;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:900;
+}
+.mdCardBtn:hover{ background:rgba(255,255,255,0.06); }
+
+@media (max-width: 900px){
+  .mdCardsRow{ grid-template-columns: 1fr; }
+}
+@media (max-width: 520px){
+  .mdSidebar{ display:none; }
+  .mdMain{ padding:14px; }
+}

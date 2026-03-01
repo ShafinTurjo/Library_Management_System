@@ -1,0 +1,214 @@
+.adWrap{
+  display:flex;
+  min-height:100vh;
+  background:#0b1020;
+  color:#e9eefc;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+.adSidebar{
+  width:280px;
+  background:#0f1730;
+  border-right:1px solid rgba(255,255,255,0.08);
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+
+.adBrand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.04);
+}
+
+.adLogo{
+  width:40px;height:40px;
+  display:grid;place-items:center;
+  border-radius:12px;
+  background:rgba(255,255,255,0.08);
+  font-size:20px;
+}
+
+.adBrandTitle{ font-weight:700; font-size:16px; }
+.adBrandSub{ opacity:0.75; font-size:12px; margin-top:2px; }
+
+.adNav{ display:flex; flex-direction:column; gap:10px; }
+
+.adNavItem{
+  border:0;
+  text-align:left;
+  background:transparent;
+  color:#e9eefc;
+  padding:12px 12px;
+  border-radius:12px;
+  cursor:pointer;
+  font-size:14px;
+  opacity:0.9;
+}
+.adNavItem:hover{ background:rgba(255,255,255,0.06); }
+.adNavItem.active{ background:rgba(86,128,255,0.22); outline:1px solid rgba(86,128,255,0.25); }
+
+.adSideFooter{
+  margin-top:auto;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding-top:12px;
+  border-top:1px solid rgba(255,255,255,0.08);
+}
+
+.adUserBox{
+  padding:10px 12px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.04);
+}
+.adUserName{ font-weight:700; }
+.adUserRole{ opacity:0.7; font-size:12px; margin-top:2px; }
+
+.adLogout{
+  border:0;
+  cursor:pointer;
+  padding:12px 12px;
+  border-radius:12px;
+  background:rgba(255,99,99,0.16);
+  color:#ffd5d5;
+}
+.adLogout:hover{ background:rgba(255,99,99,0.22); }
+
+.adMain{
+  flex:1;
+  padding:22px 22px 30px;
+}
+
+.adTopbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:16px;
+  padding:18px;
+  border-radius:18px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.adHello{ font-size:18px; font-weight:800; }
+.adMuted{ opacity:0.7; margin-top:6px; font-size:13px; }
+
+.adTopActions{ display:flex; gap:10px; }
+.adBtn{
+  border:0;
+  cursor:pointer;
+  padding:10px 14px;
+  border-radius:12px;
+  background:rgba(86,128,255,0.85);
+  color:white;
+  font-weight:700;
+}
+.adBtn:hover{ filter:brightness(1.05); }
+
+.adBtnGhost{
+  border:1px solid rgba(255,255,255,0.18);
+  cursor:pointer;
+  padding:10px 14px;
+  border-radius:12px;
+  background:transparent;
+  color:#e9eefc;
+  font-weight:700;
+}
+.adBtnGhost:hover{ background:rgba(255,255,255,0.06); }
+
+.adContent{ margin-top:18px; }
+
+.adGrid{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap:14px;
+}
+
+.adStatCard{
+  padding:16px;
+  border-radius:18px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+}
+.adStatTitle{ opacity:0.75; font-size:13px; }
+.adStatValue{ font-size:26px; font-weight:900; margin-top:8px; }
+.adStatSub{ opacity:0.65; font-size:12px; margin-top:6px; }
+
+.adPanels{
+  margin-top:14px;
+  display:grid;
+  grid-template-columns: 1.1fr 1.4fr;
+  gap:14px;
+}
+
+.adPanel{
+  padding:16px;
+  border-radius:18px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+}
+
+.adPanelHead{ margin-bottom:12px; }
+.adPanelTitle{ font-weight:900; font-size:15px; }
+.adPanelSub{ opacity:0.65; font-size:12px; margin-top:4px; }
+
+.adActions{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:12px;
+}
+
+.adAction{
+  text-align:left;
+  border:1px solid rgba(255,255,255,0.10);
+  background:rgba(255,255,255,0.03);
+  color:#e9eefc;
+  padding:12px;
+  border-radius:16px;
+  cursor:pointer;
+}
+.adAction:hover{ background:rgba(255,255,255,0.06); }
+.adAction span{
+  display:block;
+  opacity:0.7;
+  font-size:12px;
+  margin-top:6px;
+}
+
+.adTableWrap{
+  overflow:auto;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.08);
+}
+.adTable{
+  width:100%;
+  border-collapse:collapse;
+  min-width:520px;
+}
+.adTable th, .adTable td{
+  padding:10px 12px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+  font-size:13px;
+}
+.adTable th{ text-align:left; opacity:0.8; }
+
+.adNote{
+  margin-top:12px;
+  opacity:0.7;
+  font-size:12px;
+}
+
+@media (max-width: 1100px){
+  .adGrid{ grid-template-columns: repeat(2, 1fr); }
+  .adPanels{ grid-template-columns: 1fr; }
+}
+@media (max-width: 520px){
+  .adSidebar{ display:none; }
+  .adMain{ padding:14px; }
+  .adGrid{ grid-template-columns: 1fr; }
+}
