@@ -1,7 +1,7 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
-include "index.php"; 
+require_once "db.php";
 
 $sql = "SELECT lc.*, u.name FROM LibraryCards lc 
         JOIN Users u ON lc.userId = u.userId";

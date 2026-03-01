@@ -16,7 +16,7 @@ function Login() {
     }
 
     try {
-      const response = await fetch("http://localhost/DBProject/login.php", {
+      const response = await fetch("http://localhost/mssqlproject/login.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, password }),

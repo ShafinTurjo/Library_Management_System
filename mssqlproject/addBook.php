@@ -3,7 +3,7 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
 
-include "index.php"; 
+require_once "db.php";
 
 $data = json_decode(file_get_contents("php://input"), true);
 

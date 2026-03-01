@@ -1,18 +1,27 @@
 <?php
-$serverName = "localhost\\SQLEXPRESS";
+
+$serverName = ".\SQLEXPRESS"; 
+
 $connectionOptions = [
     "Database" => "LibraryDB",
     "Uid" => "new",
-    "PWD" => "1234"
+    "PWD" => "1234",
+    "CharacterSet" => "UTF-8",
+    "TrustServerCertificate" => true,
+    "Encrypt" => false
 ];
+
+
+sqlsrv_configure("WarningsReturnAsErrors", 0);
 
 $conn = sqlsrv_connect($serverName, $connectionOptions);
 
 if ($conn === false) {
-    http_response_code(500);
+    header('Content-Type: application/json');
     die(json_encode([
         "status" => "error",
-        "message" => "DB connection failed",
+        "message" => "Database connection failed",
         "details" => sqlsrv_errors()
     ]));
 }
+?>

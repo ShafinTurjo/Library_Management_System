@@ -1,7 +1,7 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
-include "index.php"; 
+require_once "db.php";
 
 $sql = "SELECT t.transactionId, u.name as userName, b.title as bookTitle, 
                t.issueDate, t.dueDate, t.returnDate, t.fine 

@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
-include "index.php"; 
+require_once "db.php";
 
 $sql = "SELECT * FROM Books";
 $stmt = sqlsrv_query($conn, $sql);

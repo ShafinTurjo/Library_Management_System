@@ -1,5 +1,5 @@
 <?php
-include "index.php";
+require_once "db.php";
 
 if (!isset($_GET['token'])) {
     die("No token provided!");

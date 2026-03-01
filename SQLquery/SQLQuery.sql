@@ -71,3 +71,13 @@ CREATE TABLE Transactions (
     FOREIGN KEY (bookId) REFERENCES Books(id)
 );
 SELECT * FROM Transactions ;
+CREATE TABLE LibraryCards (
+    cardId INT PRIMARY KEY IDENTITY(1,1),
+    userId VARCHAR(50), 
+    cardNumber VARCHAR(20) UNIQUE,
+    issueDate DATE,
+    expiryDate DATE,
+    status VARCHAR(20) DEFAULT 'Active',
+    FOREIGN KEY (userId) REFERENCES Users(userId)
+);
+SELECT * FROM LibraryCards ;

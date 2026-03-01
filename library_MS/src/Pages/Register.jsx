@@ -17,7 +17,7 @@ function Register() {
 
     try {
       // ✅ FIX: correct backend URL
-      const response = await fetch("http://localhost/DBProject/register.php", {
+      const response = await fetch("http://localhost/mssqlproject/register.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
