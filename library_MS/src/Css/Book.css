@@ -183,3 +183,33 @@
     font-size: 24px;
     margin-bottom: 10px;
 }
+
+
+.issue-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.issue-form input {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    font-weight: 600; 
+}
+
+.issue-btn {
+    background-color: #4a5fd1;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.issue-btn:hover {
+    background-color: #3f51b5;
+}
