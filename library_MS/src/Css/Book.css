@@ -213,3 +213,60 @@
 .issue-btn:hover {
     background-color: #3f51b5;
 }
+
+.card-page-container {
+    background: #f0f4f8; 
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    margin-top: 25px;
+}
+
+.card-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px; 
+}
+
+.card-table th {
+    background-color: #2d3436; 
+    color: #ffffff;
+    padding: 18px;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+.card-table td {
+    background-color: #ffffff;
+    color: #2d3436;
+    padding: 15px;
+    text-align: center;
+    font-weight: 700; 
+    border-top: 1px solid #dfe6e9;
+    border-bottom: 1px solid #dfe6e9;
+}
+
+
+.card-num-highlight {
+    color: #6c5ce7;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 16px;
+}
+
+
+.card-status-active {
+    background-color: #55efc4;
+    color: #00b894;
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+}
+
+.card-status-expired {
+    background-color: #ff7675;
+    color: #d63031;
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+}

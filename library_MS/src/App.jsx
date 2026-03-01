@@ -11,7 +11,7 @@ import IssueBook from "./Pages/IssueBook";
 import ReturnBook from "./Pages/ReturnBook";
 import TransactionList from "./Pages/TransactionList";
 import IssueCard from "./Pages/IssueCard";
-
+import LibraryCardList from "./Pages/LibraryCardList";
 
 
 function App() {
@@ -43,6 +43,7 @@ function App() {
         <Route path="/returnbook" element={<ReturnBook />} />
         <Route path="/transactions" element={<TransactionList />} />
         <Route path="/issuecard" element={<IssueCard />} />
+        <Route path="/librarycards" element={<LibraryCardList />} />
       </Routes>
     </Router>
   );
