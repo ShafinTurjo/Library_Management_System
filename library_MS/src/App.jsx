@@ -12,7 +12,7 @@ import ReturnBook from "./Pages/ReturnBook";
 import TransactionList from "./Pages/TransactionList";
 import IssueCard from "./Pages/IssueCard";
 import LibraryCardList from "./Pages/LibraryCardList";
-
+import LibraryCardList from "./Pages/AdminDashboard";
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -44,6 +44,8 @@ function App() {
         <Route path="/transactions" element={<TransactionList />} />
         <Route path="/issuecard" element={<IssueCard />} />
         <Route path="/librarycards" element={<LibraryCardList />} />
+        <Route path="/admin-dashboard" element={<AdminDashboard />} />
+        
       </Routes>
     </Router>
   );
