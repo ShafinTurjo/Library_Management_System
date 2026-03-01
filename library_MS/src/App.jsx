@@ -9,6 +9,7 @@ import Book from "./Pages/Book";
 import AddBook from "./Pages/AddBook";
 import IssueBook from "./Pages/IssueBook";
 import ReturnBook from "./Pages/ReturnBook";
+import TransactionList from "./Pages/TransactionList";
 
 function App() {
   const [showSplash, setShowSplash] = useState(true);
@@ -37,6 +38,7 @@ function App() {
         <Route path="/addbook" element={<AddBook />} />
         <Route path="/issuebook" element={<IssueBook />} />
         <Route path="/returnbook" element={<ReturnBook />} />
+        <Route path="/transactions" element={<TransactionList />} />
       </Routes>
     </Router>
   );
