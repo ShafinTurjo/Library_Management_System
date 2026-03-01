@@ -71,3 +71,19 @@ CREATE TABLE Transactions (
     FOREIGN KEY (bookId) REFERENCES Books(id)
 );
 SELECT * FROM Transactions ;
+
+CREATE TABLE activity_logs (
+    id INT IDENTITY(1,1) PRIMARY KEY,
+    user_id INT NOT NULL,
+    action VARCHAR(255) NOT NULL,
+    created_at DATETIME DEFAULT GETDATE(),
+
+    CONSTRAINT FK_activity_user
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE
+);
+SELECT * FROM activity_logs;
+SELECT u.name, a.action, a.created_at
+FROM activity_logs a
+JOIN users u ON a.user_id = u.id
+ORDER BY a.created_at DESC;

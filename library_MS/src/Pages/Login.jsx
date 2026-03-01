@@ -1,5 +1,5 @@
-import { useState } from "react"; 
-import { Link, useNavigate } from "react-router-dom"; 
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "../Css/Login.css";
 
 function Login() {
@@ -16,33 +16,44 @@ function Login() {
     }
 
     try {
-      const response = await fetch("http://localhost/mssqlproject/login.php", {
+      const response = await fetch("http://localhost/DBProject/login.php", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: userId, password: password }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, password }),
       });
 
-      const data = await response.json();
+      const text = await response.text();
+      console.log("HTTP", response.status, "Response:", text);
+
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (err) {
+        alert("Server returned non-JSON response. Check PHP error/logs.");
+        return;
+      }
+
+      if (!response.ok) {
+        alert(data.message || `Request failed (HTTP ${response.status})`);
+        return;
+      }
 
       if (data.status === "success") {
         alert("Login Successful!");
-        
 
-        if (data.role === "Admin" || data.role === "admin") {
+        const role = data?.user?.role || "";
+
+        if (role.toLowerCase() === "admin") {
           navigate("/admin-dashboard");
         } else {
           navigate("/member-dashboard");
         }
       } else {
-        
-        alert(data.message);
+        alert(data.message || "Login failed");
       }
     } catch (err) {
-      
-      console.log("Error:", err);
-      alert("Could not connect to the server.");
+      console.error("Fetch failed:", err);
+      alert("Fetch failed: " + (err?.message || "Could not connect"));
     }
   };
 
@@ -53,7 +64,7 @@ function Login() {
         <p className="loginSubtitle">Enter your ID and Password</p>
 
         <input
-          type="text" 
+          type="text"
           placeholder="User ID"
           className="loginInput"
           value={userId}
@@ -61,14 +72,16 @@ function Login() {
         />
 
         <input
-          type="password" 
+          type="password"
           placeholder="Password"
           className="loginInput"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button type="submit" className="loginButton">Login</button>
+        <button type="submit" className="loginButton">
+          Login
+        </button>
 
         <p className="bottomText">
           New here? <Link to="/register">Register</Link>
