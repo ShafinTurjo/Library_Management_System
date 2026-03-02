@@ -6,7 +6,7 @@ header("Content-Type: application/json");
 
 if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") exit;
 
-include "index.php"; 
+require_once "db.php"; 
 
 $data = json_decode(file_get_contents("php://input"), true);
 $userId = trim($data["userId"] ?? "");
@@ -16,7 +16,6 @@ if ($userId === "" || $password === "") {
     echo json_encode(["status" => "error", "message" => "ID and Password required"]);
     exit;
 }
-
 
 $sql = "SELECT userId, password, role, name FROM users WHERE userId = ?";
 $stmt = sqlsrv_query($conn, $sql, array($userId));
@@ -28,16 +27,14 @@ if ($stmt === false) {
 
 $user = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
 
-
 if ($user && $user['password'] === $password) {
     echo json_encode([
         "status" => "success",
-        "message" => "Login successful",
-        "role" => $user['role'],
+        "role" => strtolower($user['role']), 
         "name" => $user['name']
     ]);
 } else {
-    echo json_encode(["status" => "error", "message" => "Invalid Credentials"]);
+    echo json_encode(["status" => "error", "message" => "Invalid ID or Password"]);
 }
-
 sqlsrv_close($conn);
+?>

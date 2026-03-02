@@ -8,40 +8,33 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    if (!userId || !password) {
-      alert("Please fill in all fields");
-      return;
-    }
-
     try {
       const response = await fetch("http://localhost/mssqlproject/login.php", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        body: JSON.stringify({
-          userId: String(userId).trim(),
-          password: String(password),
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, password }),
       });
 
-      const text = await response.text();
-      console.log("HTTP", response.status, "Response:", text);
+      const data = await response.json();
 
-      const data = JSON.parse(text);
+      if (data.status === "success") {
+        
+        const userData = {
+          name: data.name,
+          role: data.role.toLowerCase()
+        };
+        localStorage.setItem("user", JSON.stringify(userData));
 
-      if (!response.ok) {
-        alert(data.message || `HTTP ${response.status}`);
-        return;
+        if (userData.role === "admin") {
+          navigate("/admin-dashboard");
+        } else {
+          navigate("/member-dashboard");
+        }
+      } else {
+        alert(data.message);
       }
-
-      alert("Login Successful!");
-      const role = (data?.user?.role || "").toLowerCase();
-      navigate(role === "admin" ? "/admin-dashboard" : "/member-dashboard");
     } catch (err) {
-      console.error(err);
-      alert("Fetch failed: " + (err?.message || "Unknown error"));
+      alert("Login failed!");
     }
   };
 
@@ -49,34 +42,12 @@ function Login() {
     <div className="loginContainer">
       <div className="loginCard">
         <h1 className="loginTitle">Library Login</h1>
-        <p className="loginSubtitle">Enter your ID and Password</p>
-
-        <input
-          type="text"
-          placeholder="User ID"
-          className="loginInput"
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
-        />
-
-        <input
-          type="password"
-          placeholder="Password"
-          className="loginInput"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <button type="button" className="loginButton" onClick={handleLogin}>
-          Login
-        </button>
-
-        <p className="bottomText">
-          New here? <Link to="/register">Register</Link>
-        </p>
+        <input type="text" placeholder="User ID" className="loginInput" onChange={(e) => setUserId(e.target.value)} />
+        <input type="password" placeholder="Password" className="loginInput" onChange={(e) => setPassword(e.target.value)} />
+        <button className="loginButton" onClick={handleLogin}>Login</button>
+        <p className="bottomText">New? <Link to="/register">Register</Link></p>
       </div>
     </div>
   );
 }
-
 export default Login;

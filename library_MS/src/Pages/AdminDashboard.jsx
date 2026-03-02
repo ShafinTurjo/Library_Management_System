@@ -6,44 +6,47 @@ function StatCard({ title, value, sub }) {
   return (
     <div className="adStatCard">
       <div className="adStatTitle">{title}</div>
-      <div className="adStatValue">{value}</div>
-      {sub ? <div className="adStatSub">{sub}</div> : null}
+      <div className="adStatValue">{value || "0"}</div>
+      {sub && <div className="adStatSub">{sub}</div>}
     </div>
   );
 }
 
 function AdminDashboard() {
   const navigate = useNavigate();
-  const [active, setActive] = useState("overview");
-
+  const [stats, setStats] = useState({ totalBooks: 0, totalCards: 0, totalIssued: 0, totalPending: 0 });
+  const [recentActivity, setRecentActivity] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const user = useMemo(() => {
     try {
       const raw = localStorage.getItem("user");
       return raw ? JSON.parse(raw) : null;
-    } catch {
-      return null;
-    }
+    } catch { return null; }
   }, []);
 
   useEffect(() => {
-    if (!user) navigate("/login");
-    if (user && String(user.role || "").toLowerCase() !== "admin") {
-      navigate("/member-dashboard");
+    if (!user || String(user.role).toLowerCase() !== "admin") {
+      navigate("/login");
+      return;
     }
+
+    Promise.all([
+      fetch("http://localhost/mssqlproject/getAdminStats.php").then(res => res.json()),
+      fetch("http://localhost/mssqlproject/transactionList.php").then(res => res.json())
+    ])
+    .then(([statsData, activityData]) => {
+      setStats(statsData);
+      setRecentActivity(activityData.slice(0, 5));
+      setLoading(false);
+    })
+    .catch(err => {
+      console.error(err);
+      setLoading(false);
+    });
   }, [user, navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    navigate("/login");
-  };
-
-  const recent = [
-    { id: 1, type: "Issue", userId: "u102", book: "Clean Code", date: "2026-03-01" },
-    { id: 2, type: "Return", userId: "u205", book: "The Pragmatic Programmer", date: "2026-03-01" },
-    { id: 3, type: "Add Book", userId: "admin", book: "Database Systems", date: "2026-02-28" },
-    { id: 4, type: "Issue", userId: "u009", book: "Discrete Mathematics", date: "2026-02-28" },
-  ];
+  if (loading) return <div className="loading-screen">Loading Admin Panel...</div>;
 
   return (
     <div className="adWrap">
@@ -52,143 +55,80 @@ function AdminDashboard() {
           <div className="adLogo">📚</div>
           <div>
             <div className="adBrandTitle">Library Admin</div>
-            <div className="adBrandSub">Dashboard</div>
+            <div className="adBrandSub">System Management</div>
           </div>
         </div>
-
         <nav className="adNav">
-          <button
-            className={`adNavItem ${active === "overview" ? "active" : ""}`}
-            onClick={() => setActive("overview")}
-          >
-            Overview
-          </button>
-          <button
-            className={`adNavItem ${active === "books" ? "active" : ""}`}
-            onClick={() => setActive("books")}
-          >
-            Manage Books
-          </button>
-          <button
-            className={`adNavItem ${active === "users" ? "active" : ""}`}
-            onClick={() => setActive("users")}
-          >
-            Manage Users
-          </button>
-          <button
-            className={`adNavItem ${active === "transactions" ? "active" : ""}`}
-            onClick={() => setActive("transactions")}
-          >
-            Transactions
-          </button>
-          <button
-            className={`adNavItem ${active === "settings" ? "active" : ""}`}
-            onClick={() => setActive("settings")}
-          >
-            Settings
-          </button>
+          <button className="adNavItem active" onClick={() => navigate("/admin-dashboard")}>🏠 Overview</button>
+          <button className="adNavItem" onClick={() => navigate("/addbook")}>📖 Manage Books</button>
+          <button className="adNavItem" onClick={() => navigate("/issuecard")}>🪪 Issue New Card</button>
+          <button className="adNavItem" onClick={() => navigate("/card-history")}>📜 Library Card History</button>
+          <button className="adNavItem" onClick={() => navigate("/transactions")}>💸 Transactions</button>
         </nav>
 
+        
         <div className="adSideFooter">
-          <div className="adUserBox">
-            <div className="adUserName">{user?.name || "Admin"}</div>
-            <div className="adUserRole">{user?.role || "Admin"}</div>
+          <div className="adUserBox" style={{ padding: '10px 12px', borderRadius: '14px', background: 'rgba(255,255,255,0.04)', marginBottom: '10px' }}>
+            <div className="adUserName" style={{ fontWeight: '800', color: '#e9eefc' }}>
+              {user?.name || "Admin"}
+            </div>
+            <div className="adUserRole" style={{ opacity: '0.7', fontSize: '12px', marginTop: '2px', color: '#e9eefc' }}>
+              Administrator
+            </div>
           </div>
-
-          <button className="adLogout" onClick={handleLogout}>
+          <button className="adLogout" onClick={() => { localStorage.clear(); navigate("/login"); }}>
             Logout
           </button>
         </div>
       </aside>
-      
+
       <main className="adMain">
         <header className="adTopbar">
           <div>
-            <div className="adHello">Welcome back, {user?.name || "Admin"} 👋</div>
-            <div className="adMuted">Here’s what’s happening in your library today.</div>
+            <div className="adHello">Welcome, {user?.name} 👋</div>
+            <div className="adMuted">Real-time status of your library.</div>
           </div>
-
-          <div className="adTopActions">
-            <button className="adBtn" onClick={() => setActive("books")}>
-              + Add Book
-            </button>
-            <button className="adBtnGhost" onClick={() => setActive("users")}>
-              + Add User
-            </button>
+          <div className="adActions-Top">
+             <button className="adBtn" onClick={() => navigate("/addbook")}>+ Add Book</button>
           </div>
         </header>
 
-        {/* Content */}
         <section className="adContent">
           <div className="adGrid">
-            <StatCard title="Total Books" value="1,248" sub="Across all categories" />
-            <StatCard title="Issued Today" value="23" sub="+4 vs yesterday" />
-            <StatCard title="Overdue" value="8" sub="Needs attention" />
-            <StatCard title="Active Members" value="312" sub="Last 30 days" />
+            <StatCard title="Total Books" value={stats.totalBooks} />
+            <StatCard title="Books Issued" value={stats.totalIssued} />
+            <StatCard title="Total Cards" value={stats.totalCards} />
+            <StatCard title="Overdue" value={stats.totalPending} />
           </div>
 
-          <div className="adPanels">
-            <div className="adPanel">
-              <div className="adPanelHead">
-                <div className="adPanelTitle">Quick Actions</div>
-                <div className="adPanelSub">Common admin tasks</div>
-              </div>
-
-              <div className="adActions">
-                <button className="adAction" onClick={() => navigate("/add-book")}>
-                  ➕ Add Book
-                  <span>Insert new book into catalog</span>
-                </button>
-
-                <button className="adAction" onClick={() => navigate("/issue-book")}>
-                  📤 Issue Book
-                  <span>Issue a book to a member</span>
-                </button>
-
-                <button className="adAction" onClick={() => navigate("/return-book")}>
-                  📥 Return Book
-                  <span>Process book returns</span>
-                </button>
-
-                <button className="adAction" onClick={() => setActive("transactions")}>
-                  🧾 View Transactions
-                  <span>Recent issues/returns</span>
-                </button>
-              </div>
+          <div className="adPanel">
+            <div className="adPanelTitle">Quick Actions</div>
+            <div className="adActions">
+              <button className="adAction" onClick={() => navigate("/addbook")}>➕ Add Book</button>
+              <button className="adAction" onClick={() => navigate("/issuebook")}>📤 Issue Book</button>
+              <button className="adAction" onClick={() => navigate("/returnbook")}>📥 Return Book</button>
+              <button className="adAction" onClick={() => navigate("/issuecard")}>🪪 Issue Card</button>
             </div>
+          </div>
 
-            <div className="adPanel">
-              <div className="adPanelHead">
-                <div className="adPanelTitle">Recent Activity</div>
-                <div className="adPanelSub">Latest actions in the system</div>
-              </div>
-
-              <div className="adTableWrap">
-                <table className="adTable">
-                  <thead>
-                    <tr>
-                      <th>Type</th>
-                      <th>User</th>
-                      <th>Book</th>
-                      <th>Date</th>
+          <div className="adPanel">
+            <div className="adPanelTitle">Recent Activity</div>
+            <div className="adTableWrap">
+              <table className="adTable">
+                <thead>
+                  <tr><th>User</th><th>Book</th><th>Type</th><th>Date</th></tr>
+                </thead>
+                <tbody>
+                  {recentActivity.map((r, i) => (
+                    <tr key={i}>
+                      <td>{r.userId}</td>
+                      <td>{r.bookName}</td>
+                      <td><span className={`badge ${r.type.toLowerCase()}`}>{r.type}</span></td>
+                      <td>{r.date}</td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {recent.map((r) => (
-                      <tr key={r.id}>
-                        <td>{r.type}</td>
-                        <td>{r.userId}</td>
-                        <td>{r.book}</td>
-                        <td>{r.date}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="adNote">
-                🔧 Next step: API connect করে real data আনতে পারিস।
-              </div>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
