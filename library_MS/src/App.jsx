@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
-
+import Author from "./Pages/Author";
 import Splash from "./Pages/Splash";
 import Home from "./Pages/Home";
 import Register from "./Pages/Register";
@@ -12,8 +12,6 @@ import ReturnBook from "./Pages/ReturnBook";
 import TransactionList from "./Pages/TransactionList";
 import IssueCard from "./Pages/IssueCard";
 import LibraryCardList from "./Pages/LibraryCardList";
-
-
 import AdminDashboard from "./Pages/AdminDashboard";
 import MemberDashboard from "./Pages/MemberDashboard";
 
@@ -47,7 +45,7 @@ function App() {
 
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/member-dashboard" element={<MemberDashboard />} />
-
+        <Route path="/authors" element={<Author />} /> 
       </Routes>
     </Router>
   );
