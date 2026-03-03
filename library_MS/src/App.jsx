@@ -12,43 +12,42 @@ import ReturnBook from "./Pages/ReturnBook";
 import TransactionList from "./Pages/TransactionList";
 import IssueCard from "./Pages/IssueCard";
 import LibraryCardList from "./Pages/LibraryCardList";
-import LibraryCardList from "./Pages/AdminDashboard";
-import LibraryCardList from "./Pages/MemberDashboard";
-import LibraryCardList from "./Pages/LibraryCardList";
+
+
+import AdminDashboard from "./Pages/AdminDashboard";
+import MemberDashboard from "./Pages/MemberDashboard";
+
+
+
 function App() {
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
-      setShowSplash(false);
-    }, 2500);
+    const t = setTimeout(() => setShowSplash(false), 2500);
+    return () => clearTimeout(t);
   }, []);
 
-  if (showSplash) {
-    return <Splash />;
-  }
-  
+  if (showSplash) return <Splash />;
+
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
         <Route path="/books" element={<Book />} />
-
-        <Route path="/admin-dashboard" element={<Home />} /> 
-        <Route path="/member-dashboard" element={<Book />} />
-
         <Route path="/addbook" element={<AddBook />} />
         <Route path="/issuebook" element={<IssueBook />} />
         <Route path="/returnbook" element={<ReturnBook />} />
         <Route path="/transactions" element={<TransactionList />} />
+
         <Route path="/issuecard" element={<IssueCard />} />
         <Route path="/librarycards" element={<LibraryCardList />} />
+
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/member-dashboard" element={<MemberDashboard />} />
-        <Route path="/books" element={<Book />} />
-        <Route path="/library-card" element={<LibraryCard />} />
+
       </Routes>
     </Router>
   );

@@ -29,16 +29,42 @@ function Login() {
       const text = await response.text();
       console.log("HTTP", response.status, "Response:", text);
 
-      const data = JSON.parse(text);
-
-      if (!response.ok) {
-        alert(data.message || `HTTP ${response.status}`);
+      // ✅ Safe JSON parse
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch (e) {
+        alert("Server response JSON na. Console e raw response dekhun.");
         return;
       }
 
+      if (!response.ok || data?.status === "error") {
+        alert(data?.message || `HTTP ${response.status}`);
+        return;
+      }
+
+      // ✅ IMPORTANT: Dashboard auth-guard er jonno user save
+      if (data?.user) {
+        localStorage.setItem("user", JSON.stringify(data.user));
+      } else {
+        // user object na thakলে ও-ও problem — তাও prevent করে দিচ্ছি
+        localStorage.setItem(
+          "user",
+          JSON.stringify({ userId: String(userId).trim(), role: data?.role || "member" })
+        );
+      }
+
       alert("Login Successful!");
-      const role = (data?.user?.role || "").toLowerCase();
-      navigate(role === "admin" ? "/admin-dashboard" : "/member-dashboard");
+
+      // ✅ Role based landing
+      const role = String(data?.user?.role || data?.role || "").toLowerCase();
+
+      // replace:true দিলে back চাপলে আবার login এ ফেরত যাবে না
+      if (role === "admin") {
+        navigate("/admin-dashboard", { replace: true });
+      } else {
+        navigate("/member-dashboard", { replace: true });
+      }
     } catch (err) {
       console.error(err);
       alert("Fetch failed: " + (err?.message || "Unknown error"));
@@ -65,6 +91,9 @@ function Login() {
           className="loginInput"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleLogin();
+          }}
         />
 
         <button type="button" className="loginButton" onClick={handleLogin}>
