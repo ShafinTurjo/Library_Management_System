@@ -16,27 +16,17 @@ require_once "db.php";
 $raw = file_get_contents("php://input");
 $input = json_decode($raw, true);
 
-if (!is_array($input)) {
+$BookID = (int)($input["BookID"] ?? 0);
+$AuthorID = (int)($input["AuthorID"] ?? 0);
+
+if ($BookID <= 0 || $AuthorID <= 0) {
   http_response_code(400);
-  echo json_encode(["status"=>"error","message"=>"Invalid JSON body","raw_preview"=>substr($raw,0,200)]);
+  echo json_encode(["status"=>"error","message"=>"BookID and AuthorID required"]);
   exit();
 }
 
-$name = trim($input["AuthorName"] ?? "");
-$country = isset($input["Country"]) ? trim((string)$input["Country"]) : null;
-$bio = isset($input["Bio"]) ? trim((string)$input["Bio"]) : null;
-
-if ($name === "") {
-  http_response_code(400);
-  echo json_encode(["status"=>"error","message"=>"AuthorName is required"]);
-  exit();
-}
-
-$sql = "INSERT INTO dbo.Author (AuthorName, Country, Bio, CreatedAt)
-        VALUES (?, ?, ?, GETDATE())";
-
-$params = [$name, ($country === "" ? null : $country), ($bio === "" ? null : $bio)];
-$stmt = sqlsrv_query($conn, $sql, $params);
+$sql = "INSERT INTO dbo.BookAuthor (BookID, AuthorID) VALUES (?, ?)";
+$stmt = sqlsrv_query($conn, $sql, [$BookID, $AuthorID]);
 
 if ($stmt === false) {
   http_response_code(500);
@@ -44,4 +34,4 @@ if ($stmt === false) {
   exit();
 }
 
-echo json_encode(["status"=>"success","message"=>"Author added"]);
+echo json_encode(["status"=>"success","message"=>"Linked"]);

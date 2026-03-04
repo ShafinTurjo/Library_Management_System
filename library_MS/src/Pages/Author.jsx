@@ -9,58 +9,116 @@ export default function Author() {
   const [Country, setCountry] = useState("");
   const [Bio, setBio] = useState("");
 
+  // ✅ edit mode
+  const [editingId, setEditingId] = useState(null);
+
   const loadAuthors = async () => {
-    const res = await fetch(`${API}/getAuthors.php`);
-    const data = await res.json();
-    if (data.status === "success") setAuthors(data.data);
-    else alert(data.message || "Failed to load authors");
+    try {
+      const res = await fetch(`${API}/getAuthors.php`);
+      const data = await res.json();
+      if (data.status === "success") setAuthors(data.data);
+      else alert(data.message || "Failed to load authors");
+    } catch (e) {
+      alert("API error: " + e.message);
+    }
   };
 
   useEffect(() => {
     loadAuthors();
   }, []);
 
+  const clearForm = () => {
+    setAuthorName("");
+    setCountry("");
+    setBio("");
+    setEditingId(null);
+  };
+
   const addAuthor = async () => {
     if (!AuthorName.trim()) return alert("Author name required!");
 
-    const res = await fetch(`${API}/addAuthor.php`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        AuthorName: AuthorName.trim(),
-        Country: Country.trim() || null,
-        Bio: Bio.trim() || null,
-      }),
-    });
+    try {
+      const res = await fetch(`${API}/addAuthor.php`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          AuthorName: AuthorName.trim(),
+          Country: Country.trim() || null,
+          Bio: Bio.trim() || null,
+        }),
+      });
 
-    const data = await res.json();
-    if (data.status === "success") {
-      setAuthorName("");
-      setCountry("");
-      setBio("");
-      loadAuthors();
-      alert("Author Added ✅");
-    } else {
-      alert(data.message || "Add failed");
-      console.log(data);
+      const data = await res.json();
+      if (data.status === "success") {
+        clearForm();
+        loadAuthors();
+        alert("Author Added ✅");
+      } else {
+        alert(data.message || "Add failed");
+        console.log(data);
+      }
+    } catch (e) {
+      alert("API error: " + e.message);
+    }
+  };
+
+  const editAuthor = (author) => {
+    setEditingId(author.AuthorID);
+    setAuthorName(author.AuthorName || "");
+    setCountry(author.Country || "");
+    setBio(author.Bio || "");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const updateAuthor = async () => {
+    if (!editingId) return;
+    if (!AuthorName.trim()) return alert("Author name required!");
+
+    try {
+      const res = await fetch(`${API}/updateAuthor.php`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          AuthorID: editingId,
+          AuthorName: AuthorName.trim(),
+          Country: Country.trim() || null,
+          Bio: Bio.trim() || null,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.status === "success") {
+        clearForm();
+        loadAuthors();
+        alert("Author Updated ✅");
+      } else {
+        alert(data.message || "Update failed");
+        console.log(data);
+      }
+    } catch (e) {
+      alert("API error: " + e.message);
     }
   };
 
   const deleteAuthor = async (AuthorID) => {
     if (!confirm("Delete this author?")) return;
 
-    const res = await fetch(`${API}/deleteAuthor.php`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ AuthorID }),
-    });
+    try {
+      const res = await fetch(`${API}/deleteAuthor.php`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ AuthorID }),
+      });
 
-    const data = await res.json();
-    if (data.status === "success") {
-      loadAuthors();
-      alert("Author Deleted ✅");
-    } else {
-      alert(data.message || "Delete failed");
+      const data = await res.json();
+      if (data.status === "success") {
+        loadAuthors();
+        alert("Author Deleted ✅");
+      } else {
+        alert(data.message || "Delete failed");
+      }
+    } catch (e) {
+      alert("API error: " + e.message);
     }
   };
 
@@ -90,15 +148,34 @@ export default function Author() {
             placeholder="Bio"
             style={{ padding: 8, minWidth: 260 }}
           />
-          <button onClick={addAuthor} style={{ padding: "8px 14px" }}>
-            Add
+
+          <button
+            onClick={editingId ? updateAuthor : addAuthor}
+            style={{ padding: "8px 14px" }}
+          >
+            {editingId ? "Update" : "Add"}
           </button>
+
+          <button onClick={clearForm} style={{ padding: "8px 14px" }}>
+            Clear
+          </button>
+
+          {editingId && (
+            <span style={{ paddingTop: 10 }}>
+              Editing ID: <b>{editingId}</b>
+            </span>
+          )}
         </div>
 
         <div style={{ overflowX: "auto" }}>
-          <table border="1" cellPadding="10" style={{ borderCollapse: "collapse", width: "100%", maxWidth: 1000 }}>
+          <table
+            border="1"
+            cellPadding="10"
+            style={{ borderCollapse: "collapse", width: "100%", maxWidth: 1100 }}
+          >
             <thead>
               <tr>
+                <th>SL</th>
                 <th>ID</th>
                 <th>Name</th>
                 <th>Country</th>
@@ -110,18 +187,22 @@ export default function Author() {
             <tbody>
               {authors.length === 0 ? (
                 <tr>
-                  <td colSpan="5" style={{ textAlign: "center" }}>
+                  <td colSpan="6" style={{ textAlign: "center" }}>
                     No authors found
                   </td>
                 </tr>
               ) : (
-                authors.map((a) => (
+                authors.map((a, idx) => (
                   <tr key={a.AuthorID}>
+                    <td>{idx + 1}</td>
                     <td>{a.AuthorID}</td>
                     <td>{a.AuthorName}</td>
                     <td>{a.Country || "-"}</td>
                     <td>{a.Bio || "-"}</td>
-                    <td>
+                    <td style={{ whiteSpace: "nowrap" }}>
+                      <button onClick={() => editAuthor(a)} style={{ marginRight: 8 }}>
+                        Edit
+                      </button>
                       <button onClick={() => deleteAuthor(a.AuthorID)}>Delete</button>
                     </td>
                   </tr>

@@ -1,30 +1,67 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: Content-Type");
-header("Content-Type: application/json");
+header("Access-Control-Allow-Origin: http://localhost:5173");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Content-Type: application/json; charset=UTF-8");
 
-include "index.php"; 
-
-$data = json_decode(file_get_contents("php://input"), true);
-
-
-if (isset($data['title'], $data['author'], $data['category'], $data['status'])) {
-    $title = $data['title'];
-    $author = $data['author'];
-    $category = $data['category'];
-    $status = $data['status']; 
-
-    
-    $sql = "INSERT INTO Books (title, author, category, status) VALUES (?, ?, ?, ?)";
-    $params = array($title, $author, $category, $status);
-    $stmt = sqlsrv_query($conn, $sql, $params);
-
-    if ($stmt) {
-        echo json_encode(["status" => "success", "message" => "Book added"]);
-    } else {
-        echo json_encode(["status" => "error", "message" => "Database error"]);
-    }
-} else {
-    echo json_encode(["status" => "error", "message" => "All fields required"]);
+if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") { http_response_code(200); exit(); }
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+  http_response_code(405);
+  echo json_encode(["status"=>"error","message"=>"Only POST allowed"]);
+  exit();
 }
-?>
+
+require_once "db.php";
+
+$raw = file_get_contents("php://input");
+$input = json_decode($raw, true);
+
+if (!is_array($input)) {
+  http_response_code(400);
+  echo json_encode(["status"=>"error","message"=>"Invalid JSON body","raw_preview"=>substr($raw,0,200)]);
+  exit();
+}
+
+$title = trim($input["title"] ?? "");
+$authorText = trim($input["author"] ?? "");
+$category = trim($input["category"] ?? "");
+$status = trim($input["status"] ?? "Available");
+
+if ($title === "" || $category === "" || $status === "") {
+  http_response_code(400);
+  echo json_encode(["status"=>"error","message"=>"title, category, status required"]);
+  exit();
+}
+
+/**
+ * ✅ NOTE:
+ * status যদি problem করে, bracket দিয়ে [status] use করলাম
+ */
+$sql = "INSERT INTO dbo.Books (title, author, category, [status])
+        OUTPUT INSERTED.id AS bookId
+        VALUES (?, ?, ?, ?)";
+
+$params = [$title, $authorText, $category, $status];
+
+$stmt = sqlsrv_query($conn, $sql, $params);
+
+if ($stmt === false) {
+  http_response_code(500);
+  echo json_encode([
+    "status" => "error",
+    "message" => "Insert failed",
+    "errors" => sqlsrv_errors(),
+    "debug" => [
+      "title" => $title,
+      "author" => $authorText,
+      "category" => $category,
+      "status" => $status
+    ]
+  ]);
+  exit();
+}
+
+$row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+$bookId = (int)($row["bookId"] ?? 0);
+
+echo json_encode(["status"=>"success","bookId"=>$bookId]);
