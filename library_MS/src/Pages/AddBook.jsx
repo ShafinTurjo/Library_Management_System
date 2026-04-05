@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
+import AdminSidebar from "../Components/AdminSidebar";
 
 export default function AddBook() {
   const API = "http://localhost:8080/DBProject";
 
   const [title, setTitle] = useState("");
   const [authors, setAuthors] = useState([]);
-  const [authorId, setAuthorId] = useState("");
-  const [department, setDepartment] = useState("");
+  const [author, setAuthor] = useState("");
+  const [category, setCategory] = useState("");
   const [status, setStatus] = useState("");
 
   useEffect(() => {
@@ -17,7 +18,7 @@ export default function AddBook() {
     try {
       const res = await fetch(`${API}/getAuthors.php`);
       const data = await res.json();
-      console.log("getAuthors response:", data);
+      console.log("getAuthors:", data);
 
       if (data.status === "success") {
         setAuthors(data.data || []);
@@ -25,13 +26,13 @@ export default function AddBook() {
         alert(data.message || "Failed to load authors");
       }
     } catch (err) {
-      console.error("Author fetch error:", err);
+      console.error(err);
       alert("Author load failed: " + err.message);
     }
   };
 
   const handleAddBook = async () => {
-    if (!title || !authorId || !department || !status) {
+    if (!title || !author || !category || !status) {
       alert("All fields are required");
       return;
     }
@@ -45,72 +46,85 @@ export default function AddBook() {
         },
         body: JSON.stringify({
           title,
-          authorId,
-          department,
+          author,
+          category,
           status,
         }),
       });
 
       const data = await res.json();
-      console.log("addBook response:", data);
+      console.log("addBook:", data);
 
       if (data.status === "success") {
-        alert("Book added successfully");
+        alert("Book added successfully ✅");
         setTitle("");
-        setAuthorId("");
-        setDepartment("");
+        setAuthor("");
+        setCategory("");
         setStatus("");
       } else {
         alert(data.message || "Add failed");
       }
     } catch (err) {
-      console.error("Add book error:", err);
+      console.error(err);
       alert("API error: " + err.message);
     }
   };
 
   return (
-    <div style={{ padding: "30px" }}>
-      <h1>Add New Book</h1>
+    <div style={{ display: "flex" }}>
+      <AdminSidebar />
 
-      <input
-        type="text"
-        placeholder="Book Title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+      <div style={{ flex: 1, padding: 20 }}>
+        <h2>Add New Book</h2>
 
-      <br /><br />
+        <div style={{ display: "flex", flexDirection: "column", gap: 12, maxWidth: 400 }}>
+          <input
+            type="text"
+            placeholder="Book Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            style={{ padding: 8 }}
+          />
 
-      <select value={authorId} onChange={(e) => setAuthorId(e.target.value)}>
-        <option value="">Select Author</option>
-        {authors.map((a) => (
-          <option key={a.AuthorID} value={a.AuthorID}>
-            {a.AuthorName}
-          </option>
-        ))}
-      </select>
+          <select
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+            style={{ padding: 8 }}
+          >
+            <option value="">Select Author</option>
+            {authors.map((a) => (
+              <option key={a.AuthorID} value={a.AuthorName}>
+                {a.AuthorName}
+              </option>
+            ))}
+          </select>
 
-      <br /><br />
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            style={{ padding: 8 }}
+          >
+            <option value="">Select Department</option>
+            <option value="CSE">CSE</option>
+            <option value="EEE">EEE</option>
+            <option value="BBA">BBA</option>
+          </select>
 
-      <select value={department} onChange={(e) => setDepartment(e.target.value)}>
-        <option value="">Select Department</option>
-        <option value="CSE">CSE</option>
-        <option value="EEE">EEE</option>
-        <option value="BBA">BBA</option>
-      </select>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            style={{ padding: 8 }}
+          >
+            <option value="">Select Status</option>
+            <option value="Available">Available</option>
+            <option value="Issued">Issued</option>
+          </select>
 
-      <br /><br />
-
-      <select value={status} onChange={(e) => setStatus(e.target.value)}>
-        <option value="">Select Status</option>
-        <option value="Available">Available</option>
-        <option value="Issued">Issued</option>
-      </select>
-
-      <br /><br />
-
-      <button onClick={handleAddBook}>Add Book</button>
+          <button onClick={handleAddBook} style={{ padding: "10px 14px" }}>
+            Add Book
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
