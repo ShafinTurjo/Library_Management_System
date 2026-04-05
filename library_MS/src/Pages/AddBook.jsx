@@ -1,183 +1,116 @@
-import React, { useEffect, useState } from "react";
-import "../Css/Book.css";
+import { useEffect, useState } from "react";
 
-function AddBook() {
-  const API = "http://localhost/DBProject";
+export default function AddBook() {
+  const API = "http://localhost:8080/DBProject";
 
+  const [title, setTitle] = useState("");
   const [authors, setAuthors] = useState([]);
   const [authorId, setAuthorId] = useState("");
-
-  const [book, setBook] = useState({
-    title: "",
-    category: "",
-    status: "",
-  });
+  const [department, setDepartment] = useState("");
+  const [status, setStatus] = useState("");
 
   useEffect(() => {
-    fetch(`${API}/getAuthors.php`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === "success") setAuthors(data.data);
-        else alert(data.message || "Failed to load authors");
-      })
-      .catch((err) => console.log(err));
+    loadAuthors();
   }, []);
 
-  const handleChange = (e) => {
-    setBook({ ...book, [e.target.name]: e.target.value });
+  const loadAuthors = async () => {
+    try {
+      const res = await fetch(`${API}/getAuthors.php`);
+      const data = await res.json();
+      console.log("getAuthors response:", data);
+
+      if (data.status === "success") {
+        setAuthors(data.data || []);
+      } else {
+        alert(data.message || "Failed to load authors");
+      }
+    } catch (err) {
+      console.error("Author fetch error:", err);
+      alert("Author load failed: " + err.message);
+    }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!authorId) {
-      alert("Please select an Author!");
+  const handleAddBook = async () => {
+    if (!title || !authorId || !department || !status) {
+      alert("All fields are required");
       return;
     }
 
     try {
-      const selectedAuthor = authors.find(
-        (a) => String(a.AuthorID) === String(authorId)
-      );
-      const authorName = selectedAuthor?.AuthorName || "";
-
-      // 1) Add Book
-      const res1 = await fetch(`${API}/addBook.php`, {
+      const res = await fetch(`${API}/addBook.php`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
         body: JSON.stringify({
-          title: book.title,
-          category: book.category,
-          status: book.status,
-          author: authorName, // Books.author field compatibility
+          title,
+          authorId,
+          department,
+          status,
         }),
       });
 
-      const text1 = await res1.text();
-      let data1;
-      try {
-        data1 = JSON.parse(text1);
-      } catch {
-        alert("addBook.php JSON দিচ্ছে না। Console দেখো।");
-        console.log("addBook RAW:", text1);
-        return;
-      }
+      const data = await res.json();
+      console.log("addBook response:", data);
 
-      if (data1.status !== "success" || !data1.bookId) {
-        alert(data1.message || "Book add failed!");
-        console.log(data1);
-        return;
-      }
-
-      const newBookId = data1.bookId;
-
-      // 2) Link BookAuthor
-      const res2 = await fetch(`${API}/addBookAuthor.php`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          BookID: newBookId,
-          AuthorID: Number(authorId),
-        }),
-      });
-
-      const text2 = await res2.text();
-      let data2;
-      try {
-        data2 = JSON.parse(text2);
-      } catch {
-        alert("addBookAuthor.php JSON দিচ্ছে না। Console দেখো।");
-        console.log("addBookAuthor RAW:", text2);
-        return;
-      }
-
-      if (data2.status === "success") {
-        alert("Book added + Author linked ✅");
-        setBook({ title: "", category: "", status: "" });
+      if (data.status === "success") {
+        alert("Book added successfully");
+        setTitle("");
         setAuthorId("");
+        setDepartment("");
+        setStatus("");
       } else {
-        alert(data2.message || "Author link failed!");
-        console.log(data2);
+        alert(data.message || "Add failed");
       }
     } catch (err) {
-      console.error(err);
-      alert("Error occurred!");
+      console.error("Add book error:", err);
+      alert("API error: " + err.message);
     }
   };
 
   return (
-    <div className="book-page">
-      <div className="book-header">
-        <h1>Add New Book</h1>
-      </div>
+    <div style={{ padding: "30px" }}>
+      <h1>Add New Book</h1>
 
-      <form
-        onSubmit={handleSubmit}
-        className="filter-section"
-        style={{ flexDirection: "column", alignItems: "center" }}
-      >
-        <input
-          type="text"
-          name="title"
-          placeholder="Book Title"
-          value={book.title}
-          onChange={handleChange}
-          required
-        />
+      <input
+        type="text"
+        placeholder="Book Title"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+      />
 
-        <select
-          value={authorId}
-          onChange={(e) => setAuthorId(e.target.value)}
-          required
-        >
-          <option value="">Select Author</option>
-          {authors.map((a) => (
-            <option key={a.AuthorID} value={a.AuthorID}>
-              {a.AuthorName}
-            </option>
-          ))}
-        </select>
+      <br /><br />
 
-        <select
-          name="category"
-          value={book.category}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select Department</option>
-          <option value="CSE">CSE</option>
-          <option value="EEE">EEE</option>
-          <option value="BBA">BBA</option>
-          <option value="Mechanical">Mechanical</option>
-          <option value="Database">Database</option>
-          <option value="Math">Math</option>
-          <option value="Civil">Civil</option>
-          <option value="Ipe">Ipe</option>
-          <option value="Textile">Textile</option>
-          <option value="Architecture">Architecture</option>
-        </select>
+      <select value={authorId} onChange={(e) => setAuthorId(e.target.value)}>
+        <option value="">Select Author</option>
+        {authors.map((a) => (
+          <option key={a.AuthorID} value={a.AuthorID}>
+            {a.AuthorName}
+          </option>
+        ))}
+      </select>
 
-        <select
-          name="status"
-          value={book.status}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select Status</option>
-          <option value="Available">Available</option>
-          <option value="Issued">Issued</option>
-        </select>
+      <br /><br />
 
-        <button
-          type="submit"
-          className="status available"
-          style={{ cursor: "pointer", border: "none", padding: "10px 20px" }}
-        >
-          Add Book
-        </button>
-      </form>
+      <select value={department} onChange={(e) => setDepartment(e.target.value)}>
+        <option value="">Select Department</option>
+        <option value="CSE">CSE</option>
+        <option value="EEE">EEE</option>
+        <option value="BBA">BBA</option>
+      </select>
+
+      <br /><br />
+
+      <select value={status} onChange={(e) => setStatus(e.target.value)}>
+        <option value="">Select Status</option>
+        <option value="Available">Available</option>
+        <option value="Issued">Issued</option>
+      </select>
+
+      <br /><br />
+
+      <button onClick={handleAddBook}>Add Book</button>
     </div>
   );
 }
-
-export default AddBook;
