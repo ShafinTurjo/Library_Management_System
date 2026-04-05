@@ -94,19 +94,16 @@ CREATE TABLE Admin (
     UpdatedAt DATETIME NULL
 );
 
-IF OBJECT_ID('LibraryCard', 'U') IS NOT NULL DROP TABLE LibraryCard;
-CREATE TABLE LibraryCard (
-    CardID INT IDENTITY(1,1) PRIMARY KEY,
-    CardNumber VARCHAR(50) UNIQUE NOT NULL,
-    MemberID INT NOT NULL,
-    IssueDate DATE DEFAULT GETDATE(),
-    ExpiryDate DATE NOT NULL,
-    Status VARCHAR(20) DEFAULT 'Active',
-    IsActive BIT DEFAULT 1,
-    CreatedAt DATETIME DEFAULT GETDATE(),
-    UpdatedAt DATETIME NULL,
-    FOREIGN KEY (MemberID) REFERENCES members(MemberID) ON DELETE CASCADE
+CREATE TABLE LibraryCards (
+    cardId INT PRIMARY KEY IDENTITY(1,1),
+    userId VARCHAR(50), 
+    cardNumber VARCHAR(20) UNIQUE,
+    issueDate DATE,
+    expiryDate DATE,
+    status VARCHAR(20) DEFAULT 'Active',
+    FOREIGN KEY (userId) REFERENCES Users(userId)
 );
+SELECT * FROM LibraryCards ;
 GO
 
 IF OBJECT_ID('BookIssue', 'U') IS NOT NULL DROP TABLE BookIssue;
