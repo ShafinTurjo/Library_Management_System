@@ -8,7 +8,7 @@ function Book() {
   const [category, setCategory] = useState("All");
   
   useEffect(() => {
-    fetch("http://localhost/mssqlproject/getBooks.php")
+    fetch("http://localhost:8080/DBProject/getBooks.php")
       .then((res) => res.json())
       .then((data) => setBooksData(data))
       .catch((err) => console.error("Error fetching books:", err));
