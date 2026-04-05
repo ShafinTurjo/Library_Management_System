@@ -16,6 +16,14 @@ function AdminDashboard() {
   const navigate = useNavigate();
   const [active, setActive] = useState("overview");
 
+  const [stats, setStats] = useState({
+    totalBooks: 0,
+    issuedToday: 0,
+    overdue: 0,
+    activeMembers: 0,
+  });
+
+  const [loadingStats, setLoadingStats] = useState(true);
 
   const user = useMemo(() => {
     try {
@@ -27,23 +35,43 @@ function AdminDashboard() {
   }, []);
 
   useEffect(() => {
-    if (!user) navigate("/login");
-    if (user && String(user.role || "").toLowerCase() !== "admin") {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    if (String(user.role || "").toLowerCase() !== "admin") {
       navigate("/member-dashboard");
     }
   }, [user, navigate]);
+
+  useEffect(() => {
+    fetch("http://localhost/DBProject/dashboard_stats.php")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === "success") {
+          setStats({
+            totalBooks: data.data.totalBooks || 0,
+            issuedToday: data.data.issuedToday || 0,
+            overdue: data.data.overdue || 0,
+            activeMembers: data.data.activeMembers || 0,
+          });
+        } else {
+          console.error("Stats API error:", data.message);
+        }
+      })
+      .catch((err) => {
+        console.error("Stats fetch error:", err);
+      })
+      .finally(() => {
+        setLoadingStats(false);
+      });
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
     navigate("/login");
   };
-
-  const recent = [
-    { id: 1, type: "Issue", userId: "u102", book: "Clean Code", date: "2026-03-01" },
-    { id: 2, type: "Return", userId: "u205", book: "The Pragmatic Programmer", date: "2026-03-01" },
-    { id: 3, type: "Add Book", userId: "admin", book: "Database Systems", date: "2026-02-28" },
-    { id: 4, type: "Issue", userId: "u009", book: "Discrete Mathematics", date: "2026-02-28" },
-  ];
 
   return (
     <div className="adWrap">
@@ -61,31 +89,23 @@ function AdminDashboard() {
             className={`adNavItem ${active === "overview" ? "active" : ""}`}
             onClick={() => setActive("overview")}
           >
-            Overview
+            Dashboard
           </button>
-          <button
-            className={`adNavItem ${active === "books" ? "active" : ""}`}
-            onClick={() => setActive("books")}
-          >
-            Manage Books
+
+          <button className="adNavItem" onClick={() => navigate("/books")}>
+            Books
           </button>
-          <button
-            className={`adNavItem ${active === "users" ? "active" : ""}`}
-            onClick={() => setActive("users")}
-          >
-            Manage Users
+
+          <button className="adNavItem" onClick={() => navigate("/authors")}>
+            Authors
           </button>
-          <button
-            className={`adNavItem ${active === "transactions" ? "active" : ""}`}
-            onClick={() => setActive("transactions")}
-          >
+
+          <button className="adNavItem" onClick={() => navigate("/transactions")}>
             Transactions
           </button>
-          <button
-            className={`adNavItem ${active === "settings" ? "active" : ""}`}
-            onClick={() => setActive("settings")}
-          >
-            Settings
+
+          <button className="adNavItem" onClick={() => navigate("/library-cards")}>
+            Library Cards
           </button>
         </nav>
 
@@ -100,7 +120,7 @@ function AdminDashboard() {
           </button>
         </div>
       </aside>
-      
+
       <main className="adMain">
         <header className="adTopbar">
           <div>
@@ -109,22 +129,37 @@ function AdminDashboard() {
           </div>
 
           <div className="adTopActions">
-            <button className="adBtn" onClick={() => setActive("books")}>
+            <button className="adBtn" onClick={() => navigate("/add-book")}>
               + Add Book
             </button>
-            <button className="adBtnGhost" onClick={() => setActive("users")}>
+            <button className="adBtnGhost" onClick={() => navigate("/register")}>
               + Add User
             </button>
           </div>
         </header>
 
-        {/* Content */}
         <section className="adContent">
           <div className="adGrid">
-            <StatCard title="Total Books" value="1,248" sub="Across all categories" />
-            <StatCard title="Issued Today" value="23" sub="+4 vs yesterday" />
-            <StatCard title="Overdue" value="8" sub="Needs attention" />
-            <StatCard title="Active Members" value="312" sub="Last 30 days" />
+            <StatCard
+              title="Total Books"
+              value={loadingStats ? "..." : stats.totalBooks}
+              sub="From database"
+            />
+            <StatCard
+              title="Issued Today"
+              value={loadingStats ? "..." : stats.issuedToday}
+              sub="Today only"
+            />
+            <StatCard
+              title="Overdue"
+              value={loadingStats ? "..." : stats.overdue}
+              sub="Not returned yet"
+            />
+            <StatCard
+              title="Active Members"
+              value={loadingStats ? "..." : stats.activeMembers}
+              sub="Status = Active"
+            />
           </div>
 
           <div className="adPanels">
@@ -135,11 +170,6 @@ function AdminDashboard() {
               </div>
 
               <div className="adActions">
-                <button className="adAction" onClick={() => navigate("/add-book")}>
-                  ➕ Add Book
-                  <span>Insert new book into catalog</span>
-                </button>
-
                 <button className="adAction" onClick={() => navigate("/issue-book")}>
                   📤 Issue Book
                   <span>Issue a book to a member</span>
@@ -150,44 +180,10 @@ function AdminDashboard() {
                   <span>Process book returns</span>
                 </button>
 
-                <button className="adAction" onClick={() => setActive("transactions")}>
+                <button className="adAction" onClick={() => navigate("/transactions")}>
                   🧾 View Transactions
-                  <span>Recent issues/returns</span>
+                  <span>See all issue and return records</span>
                 </button>
-              </div>
-            </div>
-
-            <div className="adPanel">
-              <div className="adPanelHead">
-                <div className="adPanelTitle">Recent Activity</div>
-                <div className="adPanelSub">Latest actions in the system</div>
-              </div>
-
-              <div className="adTableWrap">
-                <table className="adTable">
-                  <thead>
-                    <tr>
-                      <th>Type</th>
-                      <th>User</th>
-                      <th>Book</th>
-                      <th>Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {recent.map((r) => (
-                      <tr key={r.id}>
-                        <td>{r.type}</td>
-                        <td>{r.userId}</td>
-                        <td>{r.book}</td>
-                        <td>{r.date}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="adNote">
-                🔧 Next step: API connect করে real data আনতে পারিস।
               </div>
             </div>
           </div>
