@@ -33,10 +33,6 @@ if ($title === "" || $category === "" || $status === "") {
   exit();
 }
 
-/**
- * ✅ NOTE:
- * status যদি problem করে, bracket দিয়ে [status] use করলাম
- */
 $sql = "INSERT INTO dbo.Books (title, author, category, [status])
         OUTPUT INSERTED.id AS bookId
         VALUES (?, ?, ?, ?)";
