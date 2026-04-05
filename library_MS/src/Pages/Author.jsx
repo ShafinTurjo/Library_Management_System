@@ -2,22 +2,25 @@ import { useEffect, useState } from "react";
 import AdminSidebar from "../Components/AdminSidebar";
 
 export default function Author() {
-  const API = "http://localhost/DBProject";
+  const API = "http://localhost:8080/DBProject";
 
   const [authors, setAuthors] = useState([]);
   const [AuthorName, setAuthorName] = useState("");
   const [Country, setCountry] = useState("");
   const [Bio, setBio] = useState("");
-
-  // ✅ edit mode
   const [editingId, setEditingId] = useState(null);
 
   const loadAuthors = async () => {
     try {
       const res = await fetch(`${API}/getAuthors.php`);
       const data = await res.json();
-      if (data.status === "success") setAuthors(data.data);
-      else alert(data.message || "Failed to load authors");
+      console.log("loadAuthors:", data);
+
+      if (data.status === "success") {
+        setAuthors(data.data || []);
+      } else {
+        alert(data.message || "Failed to load authors");
+      }
     } catch (e) {
       alert("API error: " + e.message);
     }
@@ -35,12 +38,18 @@ export default function Author() {
   };
 
   const addAuthor = async () => {
-    if (!AuthorName.trim()) return alert("Author name required!");
+    if (!AuthorName.trim()) {
+      alert("Author name required!");
+      return;
+    }
 
     try {
       const res = await fetch(`${API}/addAuthor.php`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
         body: JSON.stringify({
           AuthorName: AuthorName.trim(),
           Country: Country.trim() || null,
@@ -49,13 +58,14 @@ export default function Author() {
       });
 
       const data = await res.json();
+      console.log("addAuthor:", data);
+
       if (data.status === "success") {
         clearForm();
         loadAuthors();
         alert("Author Added ✅");
       } else {
         alert(data.message || "Add failed");
-        console.log(data);
       }
     } catch (e) {
       alert("API error: " + e.message);
@@ -72,12 +82,19 @@ export default function Author() {
 
   const updateAuthor = async () => {
     if (!editingId) return;
-    if (!AuthorName.trim()) return alert("Author name required!");
+
+    if (!AuthorName.trim()) {
+      alert("Author name required!");
+      return;
+    }
 
     try {
       const res = await fetch(`${API}/updateAuthor.php`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
         body: JSON.stringify({
           AuthorID: editingId,
           AuthorName: AuthorName.trim(),
@@ -87,13 +104,14 @@ export default function Author() {
       });
 
       const data = await res.json();
+      console.log("updateAuthor:", data);
+
       if (data.status === "success") {
         clearForm();
         loadAuthors();
         alert("Author Updated ✅");
       } else {
         alert(data.message || "Update failed");
-        console.log(data);
       }
     } catch (e) {
       alert("API error: " + e.message);
@@ -101,16 +119,21 @@ export default function Author() {
   };
 
   const deleteAuthor = async (AuthorID) => {
-    if (!confirm("Delete this author?")) return;
+    if (!window.confirm("Delete this author?")) return;
 
     try {
       const res = await fetch(`${API}/deleteAuthor.php`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
         body: JSON.stringify({ AuthorID }),
       });
 
       const data = await res.json();
+      console.log("deleteAuthor:", data);
+
       if (data.status === "success") {
         loadAuthors();
         alert("Author Deleted ✅");
@@ -129,20 +152,32 @@ export default function Author() {
       <div style={{ flex: 1, padding: 20 }}>
         <h2 style={{ marginTop: 0 }}>Author Management</h2>
 
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 16 }}>
+        <div
+          style={{
+            display: "flex",
+            gap: 10,
+            flexWrap: "wrap",
+            marginBottom: 16,
+          }}
+        >
           <input
+            type="text"
             value={AuthorName}
             onChange={(e) => setAuthorName(e.target.value)}
             placeholder="Author Name *"
             style={{ padding: 8, minWidth: 220 }}
           />
+
           <input
+            type="text"
             value={Country}
             onChange={(e) => setCountry(e.target.value)}
             placeholder="Country"
             style={{ padding: 8, minWidth: 180 }}
           />
+
           <input
+            type="text"
             value={Bio}
             onChange={(e) => setBio(e.target.value)}
             placeholder="Bio"
@@ -171,7 +206,11 @@ export default function Author() {
           <table
             border="1"
             cellPadding="10"
-            style={{ borderCollapse: "collapse", width: "100%", maxWidth: 1100 }}
+            style={{
+              borderCollapse: "collapse",
+              width: "100%",
+              maxWidth: 1100,
+            }}
           >
             <thead>
               <tr>
@@ -200,10 +239,15 @@ export default function Author() {
                     <td>{a.Country || "-"}</td>
                     <td>{a.Bio || "-"}</td>
                     <td style={{ whiteSpace: "nowrap" }}>
-                      <button onClick={() => editAuthor(a)} style={{ marginRight: 8 }}>
+                      <button
+                        onClick={() => editAuthor(a)}
+                        style={{ marginRight: 8 }}
+                      >
                         Edit
                       </button>
-                      <button onClick={() => deleteAuthor(a.AuthorID)}>Delete</button>
+                      <button onClick={() => deleteAuthor(a.AuthorID)}>
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))
