@@ -132,7 +132,7 @@ function AdminDashboard() {
             <button className="adBtn" onClick={() => navigate("/add-book")}>
               + Add Book
             </button>
-            <button className="adBtnGhost" onClick={() => navigate("/register")}>
+            <button className="adBtn" onClick={() => navigate("/register")}>
               + Add User
             </button>
           </div>

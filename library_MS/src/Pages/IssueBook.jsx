@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../Css/Book.css"; 
+import AdminSidebar from "../Components/AdminSidebar";
 
 function IssueBook() {
   const [issue, setIssue] = useState({ userId: "", bookId: "", days: 7 });
@@ -23,6 +24,7 @@ function IssueBook() {
 
   return (
     <div className="book-page">
+      <AdminSidebar />
       <h1>📅 Issue a Book</h1>
       <form onSubmit={handleIssue} className="filter-section" style={{flexDirection: "column"}}>
         <input type="text" placeholder="Member User ID" onChange={(e) => setIssue({...issue, userId: e.target.value})} required />

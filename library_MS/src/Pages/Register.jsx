@@ -16,14 +16,12 @@ function Register() {
     const userData = { name, email, userId, password, role };
 
     try {
-      // ✅ FIX: correct backend URL
       const response = await fetch("http://localhost:8080/DBProject/register.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
       });
 
-      // ✅ If PHP returns error HTML or non-JSON, this helps debug
       const text = await response.text();
       let result;
       try {

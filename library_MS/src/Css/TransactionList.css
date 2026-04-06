@@ -1,0 +1,175 @@
+.transaction-page {
+  min-height: 100vh;
+  background: #0b1020;
+  color: #e9eefc;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  display: flex;
+}
+
+/* LEFT SIDEBAR */
+.adNav {
+  width: 240px;
+  min-width: 240px;
+  background: #081225;
+  padding: 20px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* SIDEBAR BUTTON */
+.adNavItem {
+  width: 100%;
+  background: transparent;
+  color: #e9eefc;
+  border: none;
+  padding: 14px 12px;
+  border-radius: 12px;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.adNavItem:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.adNavItem.active {
+  background: #1d2c63;
+}
+
+/* RIGHT CONTENT */
+.transaction-content {
+  flex: 1;
+  padding: 30px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* HEADER */
+.book-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 95px;
+  padding: 0 28px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 25px;
+  box-sizing: border-box;
+}
+
+.book-header h1 {
+  font-size: 30px;
+  font-weight: 800;
+  color: #e9eefc;
+  margin: 0;
+}
+
+/* TABLE CONTAINER */
+.transaction-container {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 24px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-sizing: border-box;
+  overflow-x: auto;
+}
+
+/* TABLE */
+.transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 850px;
+}
+
+.transaction-table th {
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(233, 238, 252, 0.85);
+  padding: 16px 12px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.transaction-table td {
+  padding: 14px 12px;
+  text-align: center;
+  font-size: 14px;
+  color: #e9eefc;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.transaction-table tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transition: 0.3s;
+}
+
+/* STATUS */
+.status-pending {
+  color: #ffb347;
+  font-weight: 700;
+}
+
+.fine-amount {
+  color: #ff6b6b;
+  font-weight: 800;
+}
+
+.no-fine {
+  color: #7ee787;
+  font-weight: 700;
+}
+
+/* NO DATA */
+.no-transaction {
+  width: 100%;
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 18px;
+  color: rgba(233, 238, 252, 0.7);
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 14px;
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  box-sizing: border-box;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .transaction-page {
+    flex-direction: column;
+  }
+
+  .adNav {
+    width: 100%;
+    min-width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .adNavItem {
+    text-align: center;
+  }
+
+  .transaction-content {
+    padding: 18px 14px;
+  }
+}
+
+@media (max-width: 520px) {
+  .book-header h1 {
+    font-size: 24px;
+  }
+
+  .transaction-container {
+    padding: 14px;
+  }
+}

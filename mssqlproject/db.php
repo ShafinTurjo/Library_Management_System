@@ -1,8 +1,10 @@
 <?php
-$serverName = "localhost\\SQLEXPRESS";
+sqlsrv_configure("WarningsReturnAsErrors", 0);
+
+$serverName = "DESKTOP-4A789EU\\SQLEXPRESS";
+
 $connectionOptions = [
-    "Database" => "LibraryDB",
-    "Uid" => "new",
+    "UID" => "new",
     "PWD" => "1234"
 ];
 
@@ -12,7 +14,6 @@ if ($conn === false) {
     http_response_code(500);
     die(json_encode([
         "status" => "error",
-        "message" => "DB connection failed",
         "details" => sqlsrv_errors()
     ]));
 }
